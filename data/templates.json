@@ -1,0 +1,137 @@
+{
+  "templates": [
+    {
+      "id": "gradient-dark",
+      "name": "Gradient Dark",
+      "preview": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='90'%3E%3Cdefs%3E%3ClinearGradient id='grad1' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%231e293b'/%3E%3Cstop offset='100%25' style='stop-color:%230f172a'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='160' height='90' fill='url(%23grad1)'/%3E%3Ctext x='10' y='25' font-size='12' font-weight='bold' fill='%23ffffff'%3EGradient Dark%3C/text%3E%3C/svg%3E",
+      "layout": {
+        "background": "linear-gradient(135deg, #1e293b 0%, #0f172a 100%)",
+        "headlineSize": 48,
+        "headlineColor": "#ffffff",
+        "headlinePosition": {"top": 40, "left": 40},
+        "subheadlineSize": 24,
+        "subheadlineColor": "#cbd5e1",
+        "subheadlinePosition": {"top": 120, "left": 40},
+        "topicSize": 20,
+        "topicColor": "#94a3b8",
+        "topicPosition": {"top": 170, "left": 40},
+        "width": 1280,
+        "height": 720
+      }
+    },
+    {
+      "id": "neon-bright",
+      "name": "Neon Bright",
+      "preview": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='90'%3E%3Crect width='160' height='90' fill='%230f0f0f'/%3E%3Ctext x='10' y='25' font-size='12' font-weight='bold' fill='%2306b6d4'%3ENeon Bright%3C/text%3E%3C/svg%3E",
+      "layout": {
+        "background": "#0f0f0f",
+        "headlineSize": 48,
+        "headlineColor": "#06b6d4",
+        "headlinePosition": {"top": 40, "left": 40},
+        "subheadlineSize": 24,
+        "subheadlineColor": "#d946ef",
+        "subheadlinePosition": {"top": 120, "left": 40},
+        "topicSize": 20,
+        "topicColor": "#ec4899",
+        "topicPosition": {"top": 170, "left": 40},
+        "width": 1280,
+        "height": 720
+      }
+    },
+    {
+      "id": "ocean-vibes",
+      "name": "Ocean Vibes",
+      "preview": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='90'%3E%3Crect width='160' height='90' fill='%230c2340'/%3E%3Ctext x='10' y='25' font-size='12' font-weight='bold' fill='%2306b6d4'%3EOcean Vibes%3C/text%3E%3C/svg%3E",
+      "layout": {
+        "background": "#0c2340",
+        "headlineSize": 48,
+        "headlineColor": "#06b6d4",
+        "headlinePosition": {"top": 40, "left": 40},
+        "subheadlineSize": 24,
+        "subheadlineColor": "#06d6d0",
+        "subheadlinePosition": {"top": 120, "left": 40},
+        "topicSize": 20,
+        "topicColor": "#0891b2",
+        "topicPosition": {"top": 170, "left": 40},
+        "width": 1280,
+        "height": 720
+      }
+    },
+    {
+      "id": "sunset-glow",
+      "name": "Sunset Glow",
+      "preview": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='90'%3E%3Crect width='160' height='90' fill='%237c2d12'/%3E%3Ctext x='10' y='25' font-size='12' font-weight='bold' fill='%23fed7aa'%3ESunset Glow%3C/text%3E%3C/svg%3E",
+      "layout": {
+        "background": "#7c2d12",
+        "headlineSize": 48,
+        "headlineColor": "#fed7aa",
+        "headlinePosition": {"top": 40, "left": 40},
+        "subheadlineSize": 24,
+        "subheadlineColor": "#fb923c",
+        "subheadlinePosition": {"top": 120, "left": 40},
+        "topicSize": 20,
+        "topicColor": "#ea580c",
+        "topicPosition": {"top": 170, "left": 40},
+        "width": 1280,
+        "height": 720
+      }
+    },
+    {
+      "id": "forest-green",
+      "name": "Forest Green",
+      "preview": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='90'%3E%3Crect width='160' height='90' fill='%2315803d'/%3E%3Ctext x='10' y='25' font-size='12' font-weight='bold' fill='%2386efac'%3EForest Green%3C/text%3E%3C/svg%3E",
+      "layout": {
+        "background": "#15803d",
+        "headlineSize": 48,
+        "headlineColor": "#86efac",
+        "headlinePosition": {"top": 40, "left": 40},
+        "subheadlineSize": 24,
+        "subheadlineColor": "#4ade80",
+        "subheadlinePosition": {"top": 120, "left": 40},
+        "topicSize": 20,
+        "topicColor": "#16a34a",
+        "topicPosition": {"top": 170, "left": 40},
+        "width": 1280,
+        "height": 720
+      }
+    },
+    {
+      "id": "bold-contrast",
+      "name": "Bold Contrast",
+      "preview": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='90'%3E%3Crect width='160' height='90' fill='%23ffffff'/%3E%3Ctext x='10' y='25' font-size='12' font-weight='bold' fill='%23000000'%3EBold Contrast%3C/text%3E%3C/svg%3E",
+      "layout": {
+        "background": "#ffffff",
+        "headlineSize": 48,
+        "headlineColor": "#000000",
+        "headlinePosition": {"top": 40, "left": 40},
+        "subheadlineSize": 24,
+        "subheadlineColor": "#1f2937",
+        "subheadlinePosition": {"top": 120, "left": 40},
+        "topicSize": 20,
+        "topicColor": "#374151",
+        "topicPosition": {"top": 170, "left": 40},
+        "width": 1280,
+        "height": 720
+      }
+    },
+    {
+      "id": "purple-royale",
+      "name": "Purple Royale",
+      "preview": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='90'%3E%3Crect width='160' height='90' fill='%236b21a8'/%3E%3Ctext x='10' y='25' font-size='12' font-weight='bold' fill='%23e9d5ff'%3EPurple Royale%3C/text%3E%3C/svg%3E",
+      "layout": {
+        "background": "#6b21a8",
+        "headlineSize": 48,
+        "headlineColor": "#e9d5ff",
+        "headlinePosition": {"top": 40, "left": 40},
+        "subheadlineSize": 24,
+        "subheadlineColor": "#d8b4fe",
+        "subheadlinePosition": {"top": 120, "left": 40},
+        "topicSize": 20,
+        "topicColor": "#c4b5fd",
+        "topicPosition": {"top": 170, "left": 40},
+        "width": 1280,
+        "height": 720
+      }
+    }
+  ]
+}

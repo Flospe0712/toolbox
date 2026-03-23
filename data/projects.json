@@ -1,0 +1,116 @@
+{
+  "tools": [
+    {
+      "id": "thumbnail-creator",
+      "icon": "🎬",
+      "name": "YouTube Thumbnail Creator",
+      "description": "Create professional YouTube thumbnails with AI suggestions and Canvas preview",
+      "category": "YouTube",
+      "status": "active"
+    },
+    {
+      "id": "description-generator",
+      "icon": "📝",
+      "name": "Video Description Generator",
+      "description": "Auto-generate video descriptions with timestamps and chapters",
+      "category": "YouTube",
+      "status": "dev"
+    },
+    {
+      "id": "seo-optimizer",
+      "icon": "🔍",
+      "name": "SEO Optimizer",
+      "description": "Optimize tags, titles, and keywords for maximum discoverability",
+      "category": "YouTube",
+      "status": "active"
+    },
+    {
+      "id": "script-generator",
+      "icon": "✍️",
+      "name": "Video Script Generator",
+      "description": "AI-powered video scripts optimized for engagement and retention",
+      "category": "YouTube",
+      "status": "dev"
+    },
+    {
+      "id": "analytics-dashboard",
+      "icon": "📊",
+      "name": "Channel Analytics Dashboard",
+      "description": "Real-time YouTube analytics with growth predictions",
+      "category": "YouTube",
+      "status": "active"
+    },
+    {
+      "id": "comment-moderation",
+      "icon": "💬",
+      "name": "Comment Moderation AI",
+      "description": "Intelligent spam detection and comment moderation",
+      "category": "YouTube",
+      "status": "dev"
+    },
+    {
+      "id": "playlist-manager",
+      "icon": "📋",
+      "name": "Smart Playlist Manager",
+      "description": "Auto-organize and optimize playlists for engagement",
+      "category": "YouTube",
+      "status": "planned"
+    },
+    {
+      "id": "subtitle-generator",
+      "icon": "🗣️",
+      "name": "Auto Subtitle Generator",
+      "description": "Generate and translate subtitles in 50+ languages",
+      "category": "YouTube",
+      "status": "dev"
+    },
+    {
+      "id": "banner-creator",
+      "icon": "🖼️",
+      "name": "Channel Banner Creator",
+      "description": "Design professional channel banners with AI templates",
+      "category": "YouTube",
+      "status": "active"
+    },
+    {
+      "id": "podcast-transcribe",
+      "icon": "🎙️",
+      "name": "Podcast Transcription",
+      "description": "Convert audio to text with automatic timestamps",
+      "category": "Podcast",
+      "status": "planned"
+    },
+    {
+      "id": "podcast-content",
+      "icon": "🎤",
+      "name": "Podcast Content Generator",
+      "description": "Generate video descriptions, tags, and social posts from podcast",
+      "category": "Podcast",
+      "status": "active"
+    },
+    {
+      "id": "multicontent",
+      "icon": "📢",
+      "name": "Multi-Content Generator",
+      "description": "Create blog posts, newsletters, Twitter, LinkedIn, and TikTok from transcript",
+      "category": "Podcast",
+      "status": "active"
+    },
+    {
+      "id": "post-scheduler",
+      "icon": "📅",
+      "name": "Post Scheduler",
+      "description": "Schedule and publish posts across multiple platforms",
+      "category": "Social Media",
+      "status": "planned"
+    },
+    {
+      "id": "invoice-generator",
+      "icon": "💰",
+      "name": "Invoice Generator",
+      "description": "Create professional invoices and export as PDF",
+      "category": "Business",
+      "status": "planned"
+    }
+  ]
+}

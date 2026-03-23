@@ -1,0 +1,83 @@
+import { createServerClient } from '@supabase/ssr'
+import { NextResponse, type NextRequest } from 'next/server'
+
+export async function middleware(request: NextRequest) {
+  // Allow agent API access via x-api-key header
+  const isApi = request.nextUrl.pathname.startsWith('/api/')
+  if (isApi) {
+    const apiKey = request.headers.get('x-api-key')
+    if (apiKey && apiKey === process.env.INTERNAL_API_KEY) {
+      return NextResponse.next({ request })
+    }
+  }
+
+  let supabaseResponse = NextResponse.next({ request })
+
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return request.cookies.getAll()
+        },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value))
+          supabaseResponse = NextResponse.next({ request })
+          cookiesToSet.forEach(({ name, value, options }) =>
+            supabaseResponse.cookies.set(name, value, options)
+          )
+        },
+      },
+    }
+  )
+
+  const { data: { user } } = await supabase.auth.getUser()
+
+  if (!user) {
+    if (isApi) {
+      // Return 401 JSON for unauthenticated API requests
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+    const publicPaths = ['/login', '/forgot-password', '/reset-password', '/auth/callback']
+    if (!publicPaths.some(p => request.nextUrl.pathname.startsWith(p))) {
+      const url = request.nextUrl.clone()
+      url.pathname = '/login'
+      return NextResponse.redirect(url)
+    }
+  }
+
+  if (user && (request.nextUrl.pathname === '/login' || request.nextUrl.pathname === '/forgot-password')) {
+    const url = request.nextUrl.clone()
+    url.pathname = '/dashboard'
+    return NextResponse.redirect(url)
+  }
+
+  // Redirect authenticated users to onboarding if not completed (skip for API routes and onboarding itself)
+  if (user && !isApi && !request.nextUrl.pathname.startsWith('/onboarding') && !request.nextUrl.pathname.startsWith('/auth/')) {
+    // Check onboarding status via user_settings
+    const { createClient: createSupabaseClient } = await import('@supabase/supabase-js')
+    const adminSupabase = createSupabaseClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    )
+    const { data } = await adminSupabase
+      .from('user_settings')
+      .select('value')
+      .eq('key', 'onboarding_completed')
+      .single()
+
+    if (!data || data.value !== 'true') {
+      const url = request.nextUrl.clone()
+      url.pathname = '/onboarding'
+      return NextResponse.redirect(url)
+    }
+  }
+
+  return supabaseResponse
+}
+
+export const config = {
+  // Now covers both dashboard routes AND /api/ routes
+  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
+}
