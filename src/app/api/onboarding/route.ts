@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
   // Save content preferences if provided
   if (content_types && Array.isArray(content_types)) {
     for (const ct of content_types) {
-      await supabase
+      await adminSupabase
         .from('content_preferences')
         .insert({
           platform: ct.platform,
