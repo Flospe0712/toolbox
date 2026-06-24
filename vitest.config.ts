@@ -10,7 +10,7 @@ export default defineConfig({
     setupFiles: ['./vitest.setup.ts'],
     coverage: {
       reporter: ['text', 'json-summary'],
-      include: ['app/api/**/*.ts', 'components/**/*.tsx', 'lib/**/*.ts'],
+      include: ['src/app/api/**/*.ts', 'components/**/*.tsx', 'lib/**/*.ts'],
       exclude: ['**/node_modules/**', '**/*.test.*'],
     },
   },
