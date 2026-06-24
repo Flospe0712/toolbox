@@ -1,5 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server'
+﻿import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { requireAuth, sanitizePatchBody } from '@/lib/auth'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -25,12 +26,16 @@ export async function PATCH(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const { user, error: authErr } = await requireAuth()
+  if (authErr) return authErr
+
   const { id } = await params
-  const body = await req.json()
+  const updates = sanitizePatchBody(await req.json())
+  void user
 
   const { data, error } = await supabase
     .from('topics')
-    .update(body)
+    .update(updates)
     .eq('id', id)
     .select()
     .single()
@@ -43,6 +48,9 @@ export async function DELETE(
   _req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const { error: authErr } = await requireAuth()
+  if (authErr) return authErr
+
   const { id } = await params
   const { error } = await supabase
     .from('topics')

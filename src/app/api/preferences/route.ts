@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+﻿import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
 const supabase = createClient(
@@ -18,6 +18,7 @@ export async function GET(req: NextRequest) {
     .order('platform')
     .order('content_type')
     .order('created_at', { ascending: true })
+    .limit(500)
 
   if (platform) query = query.eq('platform', platform)
   if (contentType) query = query.eq('content_type', contentType)

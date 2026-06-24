@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+﻿import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
 const supabase = createClient(
@@ -16,6 +16,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
     .select('*')
     .eq('competitor_id', id)
     .order('published_at', { ascending: false })
+    .limit(100)
 
   if (platform) query = query.eq('platform', platform)
 

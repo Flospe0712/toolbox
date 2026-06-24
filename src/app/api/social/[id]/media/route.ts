@@ -1,5 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server'
+﻿import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { requireAuth } from '@/lib/auth'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -49,12 +50,17 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
 
     if (error) return NextResponse.json({ error: `DB: ${error.message}` }, { status: 500 })
     return NextResponse.json(data, { status: 201 })
-  } catch (e: any) {
-    return NextResponse.json({ error: `Unexpected: ${e.message}` }, { status: 500 })
+  } catch (e: unknown) {
+    const msg = e instanceof Error ? e.message : String(e)
+    return NextResponse.json({ error: `Unexpected: ${msg}` }, { status: 500 })
   }
 }
 
 export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { error: authErr } = await requireAuth()
+  if (authErr) return authErr
+
+  void params
   const { searchParams } = new URL(req.url)
   const fileId = searchParams.get('file_id')
   if (!fileId) return NextResponse.json({ error: 'Missing file_id' }, { status: 400 })

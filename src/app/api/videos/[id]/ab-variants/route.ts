@@ -1,5 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server'
+﻿import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { requireAuth, sanitizePatchBody } from '@/lib/auth'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -47,8 +48,9 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
-  const body = await req.json()
-  const { variantId, ...updates } = body
+  const raw = await req.json()
+  const { variantId, ...rest } = raw
+  const updates = sanitizePatchBody(rest)
 
   // If setting active, unset others first
   if (updates.is_active === true) {
@@ -71,6 +73,9 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
 }
 
 export async function DELETE(req: NextRequest) {
+  const { error: authErr } = await requireAuth()
+  if (authErr) return authErr
+
   const body = await req.json()
   const { error } = await supabase
     .from('video_ab_variants')

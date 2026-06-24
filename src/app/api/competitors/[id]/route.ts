@@ -1,10 +1,16 @@
-import { NextRequest, NextResponse } from 'next/server'
+﻿import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { requireAuth, sanitizePatchBody } from '@/lib/auth'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 )
+
+type CompetitorSocial = {
+  snapshots: Array<{ snapshot_date: string; [key: string]: unknown }>
+  [key: string]: unknown
+}
 
 export async function GET(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -23,10 +29,10 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
   const cutoff = ninetyDaysAgo.toISOString().split('T')[0]
 
   if (data.socials) {
-    data.socials = data.socials.map((social: any) => ({
+    data.socials = (data.socials as CompetitorSocial[]).map((social) => ({
       ...social,
       snapshots: (social.snapshots || []).filter(
-        (s: any) => s.snapshot_date >= cutoff
+        (s) => s.snapshot_date >= cutoff
       ),
     }))
   }
@@ -35,12 +41,16 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
 }
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { user, error: authErr } = await requireAuth()
+  if (authErr) return authErr
+  void user
+
   const { id } = await params
-  const body = await req.json()
+  const updates = sanitizePatchBody(await req.json())
 
   const { data, error } = await supabase
     .from('competitors')
-    .update(body)
+    .update(updates)
     .eq('id', id)
     .select()
     .single()
@@ -50,6 +60,9 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
 }
 
 export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { error: authErr } = await requireAuth()
+  if (authErr) return authErr
+
   const { id } = await params
 
   // Soft delete: set active = false

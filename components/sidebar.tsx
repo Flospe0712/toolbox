@@ -120,14 +120,14 @@ function ProfileStats({ userEmail }: { userEmail?: string | null }) {
   }
 
   useEffect(() => {
-    function parseTimeline(data: any): number[] {
+    function parseTimeline(data: unknown): number[] {
       const arr = Array.isArray(data) ? data : []
-      const sorted = [...arr].sort((a, b) => {
-        const ta = Number(a[0]) > 1e12 ? Number(a[0]) : new Date(a[0]).getTime()
-        const tb = Number(b[0]) > 1e12 ? Number(b[0]) : new Date(b[0]).getTime()
+      const sorted = [...arr].sort((a: [unknown, unknown], b: [unknown, unknown]) => {
+        const ta = Number(a[0]) > 1e12 ? Number(a[0]) : new Date(String(a[0])).getTime()
+        const tb = Number(b[0]) > 1e12 ? Number(b[0]) : new Date(String(b[0])).getTime()
         return ta - tb
       })
-      return sorted.map((p: any) => parseFloat(p[1]) || 0)
+      return sorted.map((p: [unknown, unknown]) => parseFloat(String(p[1])) || 0)
     }
 
     async function fetchAll() {

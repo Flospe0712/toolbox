@@ -1,5 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server'
+﻿import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { requireAuth, sanitizePatchBody } from '@/lib/auth'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -77,7 +78,8 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   }
 
   // Single update
-  const { attachmentId, ...updates } = body
+  const { attachmentId, ...rest } = body
+  const updates = sanitizePatchBody(rest)
   const { data, error } = await supabase
     .from('video_attachments')
     .update({ ...updates, updated_at: new Date().toISOString() })
@@ -90,6 +92,9 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
 }
 
 export async function DELETE(req: NextRequest) {
+  const { error: authErr } = await requireAuth()
+  if (authErr) return authErr
+
   const body = await req.json()
   const { error } = await supabase
     .from('video_attachments')
