@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+﻿import { NextRequest, NextResponse } from 'next/server'
 
 const PROMPTS: Record<string, string> = {
   script: `You are an expert YouTube content coach. Score this YouTube video script on the following dimensions (0-10 each):
@@ -120,7 +120,7 @@ export async function POST(req: NextRequest) {
     const data = await res.json()
     const raw = data.choices?.[0]?.message?.content ?? '{}'
 
-    let parsed: Record<string, any>
+    let parsed: Record<string, unknown>
     try {
       const clean = raw.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim()
       parsed = JSON.parse(clean)
