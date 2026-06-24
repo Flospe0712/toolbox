@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { requireAuth, sanitizePatchBody } from '@/lib/auth'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -19,7 +20,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
-  const body = await req.json()
+  const body = sanitizePatchBody(await req.json())
   const { data, error } = await supabase
     .from('videos')
     .update({ ...body, updated_at: new Date().toISOString() })
@@ -31,6 +32,9 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
 }
 
 export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { error: authError } = await requireAuth()
+  if (authError) return authError
+
   const { id } = await params
 
   // Cascade: delete assets, video_thumbnails, then the video itself

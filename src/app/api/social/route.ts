@@ -22,6 +22,10 @@ export async function GET(req: NextRequest) {
   if (type) query = query.eq('type', type)
   if (status) query = query.eq('status', status)
 
+  const limit = Math.min(Number(req.nextUrl.searchParams.get('limit') ?? 200), 500)
+  const offset = Number(req.nextUrl.searchParams.get('offset') ?? 0)
+  query = query.range(offset, offset + limit - 1)
+
   const { data, error } = await query
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 

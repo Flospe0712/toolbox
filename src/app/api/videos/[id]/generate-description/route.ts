@@ -171,7 +171,7 @@ ${transcription.transcript_text.slice(0, 12000)}`,
     }
 
     return NextResponse.json({ asset, description })
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message ?? 'Generation failed' }, { status: 500 })
+  } catch (err: unknown) {
+    return NextResponse.json({ error: (err instanceof Error ? err.message : String(err)) ?? 'Generation failed' }, { status: 500 })
   }
 }

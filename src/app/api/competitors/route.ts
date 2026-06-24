@@ -16,6 +16,7 @@ export async function GET(req: NextRequest) {
     .order('name')
 
   if (active) query = query.eq('active', true)
+  query = query.limit(200)
 
   const { data, error } = await query
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })

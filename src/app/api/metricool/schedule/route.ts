@@ -186,9 +186,9 @@ export async function POST(req: NextRequest) {
       scheduledAt: metricoolData.data.publicationDate,
       draft,
     })
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error('Schedule route error:', err)
-    return NextResponse.json({ error: err.message }, { status: 500 })
+    return NextResponse.json({ error: (err instanceof Error ? err.message : String(err)) }, { status: 500 })
   }
 }
 
@@ -245,8 +245,8 @@ export async function DELETE(req: NextRequest) {
       .eq('id', socialPostId)
 
     return NextResponse.json({ ok: true, deleted: metricoolPostId })
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 })
+  } catch (err: unknown) {
+    return NextResponse.json({ error: (err instanceof Error ? err.message : String(err)) }, { status: 500 })
   }
 }
 
@@ -298,7 +298,7 @@ export async function GET(req: NextRequest) {
       metricoolStatus: providerStatus,
       providers,
     })
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 })
+  } catch (err: unknown) {
+    return NextResponse.json({ error: (err instanceof Error ? err.message : String(err)) }, { status: 500 })
   }
 }

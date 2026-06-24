@@ -136,12 +136,13 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
       durationFormatted: formatTime(duration),
     })
 
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const errMsg = err instanceof Error ? err.message : String(err)
     await supabase.from('video_transcriptions').update({
       status: 'error',
-      error_message: err.message,
+      error_message: errMsg,
     }).eq('id', transcriptionId)
-    return NextResponse.json({ error: err.message }, { status: 500 })
+    return NextResponse.json({ error: errMsg }, { status: 500 })
   }
 }
 

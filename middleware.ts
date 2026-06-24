@@ -2,7 +2,9 @@ import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
 export async function middleware(request: NextRequest) {
-  // Allow agent API access via x-api-key header
+  // Allow server-to-server API access via x-api-key header.
+  // Set INTERNAL_API_KEY in your environment and pass it from trusted callers
+  // (e.g. Vercel Cron jobs, internal scripts). Never expose this key client-side.
   const isApi = request.nextUrl.pathname.startsWith('/api/')
   if (isApi) {
     const apiKey = request.headers.get('x-api-key')

@@ -61,7 +61,7 @@ export async function POST(req: NextRequest) {
       .eq('id', thumbnailId)
 
     return NextResponse.json({ analysis })
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 })
+  } catch (err: unknown) {
+    return NextResponse.json({ error: (err instanceof Error ? err.message : String(err)) }, { status: 500 })
   }
 }

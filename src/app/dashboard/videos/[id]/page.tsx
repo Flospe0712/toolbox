@@ -56,11 +56,11 @@ export default async function VideoPage({ params }: { params: Promise<{ id: stri
     videoThumbnails = vt.data ?? []
     abVariants = ab.data ?? []
     attachments = att.data ?? []
-  } catch (err: any) {
+  } catch (err: unknown) {
     return (
       <div className="min-h-screen p-8 flex flex-col items-center justify-center" style={{ background: '#0d0d0d' }}>
         <p className="text-red-400 text-sm font-mono mb-2">Server error loading video page</p>
-        <p className="text-white/30 text-xs font-mono">{String(err?.message ?? err)}</p>
+        <p className="text-white/30 text-xs font-mono">{err instanceof Error ? err.message : String(err)}</p>
       </div>
     )
   }
