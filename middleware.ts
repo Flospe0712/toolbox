@@ -54,20 +54,10 @@ export async function middleware(request: NextRequest) {
   }
 
   // Redirect authenticated users to onboarding if not completed (skip for API routes and onboarding itself)
+  // Cookie value equals user.id so it is invalidated on account switch.
   if (user && !isApi && !request.nextUrl.pathname.startsWith('/onboarding') && !request.nextUrl.pathname.startsWith('/auth/')) {
-    // Check onboarding status via user_settings
-    const { createClient: createSupabaseClient } = await import('@supabase/supabase-js')
-    const adminSupabase = createSupabaseClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    )
-    const { data } = await adminSupabase
-      .from('user_settings')
-      .select('value')
-      .eq('key', 'onboarding_completed')
-      .single()
-
-    if (!data || data.value !== 'true') {
+    const onboardingDone = request.cookies.get('onboarding_done')?.value === user.id
+    if (!onboardingDone) {
       const url = request.nextUrl.clone()
       url.pathname = '/onboarding'
       return NextResponse.redirect(url)

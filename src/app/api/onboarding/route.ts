@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { createClient as createSessionClient } from '@/lib/supabase/server'
 
-const supabase = createClient(
+const adminSupabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 )
 
 export async function GET() {
-  const { data } = await supabase
+  const { data } = await adminSupabase
     .from('user_settings')
     .select('value')
     .eq('key', 'onboarding_completed')
@@ -17,6 +18,10 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
+  // Get current user to tie the onboarding cookie to this account
+  const sessionClient = await createSessionClient()
+  const { data: { user } } = await sessionClient.auth.getUser()
+
   const body = await req.json()
   const { channel_name, niche, platforms, content_types } = body
 
@@ -30,7 +35,7 @@ export async function POST(req: NextRequest) {
 
   for (const setting of settings) {
     if (setting.value) {
-      await supabase
+      await adminSupabase
         .from('user_settings')
         .upsert(setting, { onConflict: 'key' })
     }
@@ -62,5 +67,19 @@ export async function POST(req: NextRequest) {
       })
   }
 
-  return NextResponse.json({ ok: true })
+  const response = NextResponse.json({ ok: true })
+
+  // Set cookie so middleware can skip the DB check on every request.
+  // Value = user ID so the cookie is invalidated when a different account signs in.
+  if (user) {
+    response.cookies.set('onboarding_done', user.id, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 60 * 60 * 24 * 365,
+      path: '/',
+    })
+  }
+
+  return response
 }
