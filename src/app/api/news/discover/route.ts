@@ -1,5 +1,6 @@
-import { NextRequest } from 'next/server'
+﻿import { NextRequest } from 'next/server'
 import Anthropic from '@anthropic-ai/sdk'
+import { requireAuth } from '@/lib/auth'
 
 function getClient() {
   return new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
@@ -7,14 +8,25 @@ function getClient() {
 
 const TOOLS = [
   { type: 'web_search_20260209', name: 'web_search' },
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ] as any
 
 // Stream events as newline-delimited JSON
-function encodeEvent(event: Record<string, any>): string {
+function encodeEvent(event: Record<string, unknown>): string {
   return JSON.stringify(event) + '\n'
 }
 
+type DiscoveredSource = {
+  name: unknown
+  source_type: unknown
+  url: unknown
+  color: unknown
+}
+
 export async function POST(req: NextRequest) {
+  const { error: authErr } = await requireAuth()
+  if (authErr) return authErr
+
   const { niche } = await req.json()
 
   if (!niche || typeof niche !== 'string') {
@@ -28,7 +40,7 @@ export async function POST(req: NextRequest) {
   const stream = new ReadableStream({
     async start(controller) {
       let closed = false
-      const send = (event: Record<string, any>) => {
+      const send = (event: Record<string, unknown>) => {
         if (closed) return
         try {
           controller.enqueue(encoder.encode(encodeEvent(event)))
@@ -88,12 +100,16 @@ Use varied, visually distinct colors. For Reddit sources, "url" is just the subr
             if (block.type === 'text' && block.text.trim()) {
               send({ type: 'text', text: block.text })
             } else if (block.type === 'server_tool_use') {
+              // SDK doesn't type server_tool_use yet
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               const toolBlock = block as any
               if (toolBlock.name === 'web_search') {
                 const query = toolBlock.input?.query ?? ''
                 send({ type: 'tool_start', tool: 'web_search', query })
               }
             } else if (block.type === 'web_search_tool_result') {
+              // SDK doesn't type web_search_tool_result yet
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               const resultBlock = block as any
               const searches = Array.isArray(resultBlock.content) ? resultBlock.content : []
               for (const search of searches) {
@@ -128,23 +144,20 @@ Use varied, visually distinct colors. For Reddit sources, "url" is just the subr
           (b): b is Anthropic.TextBlock => b.type === 'text'
         )
 
-        let sources: any[] = []
+        let sources: DiscoveredSource[] = []
 
         if (textBlock) {
-          // Try parsing directly
           let jsonText = textBlock.text.trim()
           const jsonMatch = jsonText.match(/```(?:json)?\s*([\s\S]*?)```/)
           if (jsonMatch) jsonText = jsonMatch[1].trim()
 
-          // Try to find JSON object in the text
           const objMatch = jsonText.match(/\{[\s\S]*"sources"\s*:\s*\[[\s\S]*\]\s*\}/)
           if (objMatch) jsonText = objMatch[0]
 
           try {
-            const parsed = JSON.parse(jsonText)
+            const parsed = JSON.parse(jsonText) as { sources?: DiscoveredSource[] }
             sources = parsed.sources ?? []
           } catch {
-            // If parsing fails, do a second pass to extract structured data
             send({ type: 'status', text: 'Extracting source data...' })
             const extractResponse = await client.messages.create({
               model: 'claude-sonnet-4-6',
@@ -174,7 +187,7 @@ For Reddit sources, "url" should be just the subreddit name. Use varied hex colo
               const om = et.match(/\{[\s\S]*"sources"\s*:\s*\[[\s\S]*\]\s*\}/)
               if (om) et = om[0]
               try {
-                const parsed = JSON.parse(et)
+                const parsed = JSON.parse(et) as { sources?: DiscoveredSource[] }
                 sources = parsed.sources ?? []
               } catch {
                 // Give up
@@ -185,7 +198,7 @@ For Reddit sources, "url" should be just the subreddit name. Use varied hex colo
 
         // Validate and generate IDs
         const validSources = sources
-          .map((s: any, i: number) => ({
+          .map((s: DiscoveredSource, i: number) => ({
             id: `discovered-${Date.now()}-${i}`,
             name: String(s.name ?? ''),
             source_type: s.source_type === 'reddit' ? 'reddit' as const : 'rss' as const,
